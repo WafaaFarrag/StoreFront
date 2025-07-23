@@ -1,0 +1,54 @@
+# =========================
+# macOS System files
+# =========================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# =========================
+# Xcode User Data
+# (personal settings should not be in Git)
+# =========================
+xcuserdata/
+*.xcuserdatad/
+*.xcuserstate
+*.xcscmblueprint
+
+# =========================
+# Build & Derived Files
+# =========================
+DerivedData/
+build/
+*.ipa
+*.xcarchive
+*.dSYM
+*.dSYM.zip
+
+# =========================
+# Swift Package Manager
+# =========================
+.build/
+Package.pins
+Package.resolved
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+
+# =========================
+# CocoaPods
+# =========================
+Pods/
+Podfile.lock
+
+# =========================
+# Carthage (if used later)
+# =========================
+Carthage/Build/
+Carthage/Checkouts/
+Carthage/DerivedData/
+
+# =========================
+# Playgrounds
+# =========================
+timeline.xctimeline
+playground.xcworkspace
