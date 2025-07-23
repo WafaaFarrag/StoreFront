@@ -4,7 +4,6 @@
 //
 //  Created by wafaa farrag on 20/07/2025.
 //
-
 import UIKit
 import RxSwift
 import RxCocoa
@@ -17,12 +16,16 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
     private var dataSource: RxCollectionViewSectionedReloadDataSource<HomeSectionModel>!
     var viewModel: HomeViewModel!
     
+    /// Track current layout mode
+    private var isGridLayout = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupCollectionView()
         setupDataSource()
         bindViewModel()
+        setupLayoutToggleButton()
         
         if viewModel.products.value.isEmpty {
             viewModel.loadInitialProducts()
@@ -31,6 +34,17 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
     
     func configure(with viewModel: HomeViewModel) {
         self.viewModel = viewModel
+    }
+    
+    // MARK: - Setup Toggle Button
+    private func setupLayoutToggleButton() {
+        let toggleButton = UIBarButtonItem(
+            title: "List",
+            style: .plain,
+            target: self,
+            action: #selector(toggleLayout)
+        )
+        navigationItem.rightBarButtonItem = toggleButton
     }
     
     // MARK: - Setup Collection View
@@ -98,6 +112,45 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
             .disposed(by: disposeBag)
     }
     
+    // MARK: - Layout Toggle Action
+    
+    @objc private func toggleLayout() {
+        isGridLayout.toggle()
+        
+        if isGridLayout {
+            
+            let pinterestLayout = PinterestLayout()
+            pinterestLayout.delegate = self
+            collectionView.setCollectionViewLayout(pinterestLayout, animated: true)
+            navigationItem.rightBarButtonItem?.title = "List"
+            
+        } else {
+           
+            let listLayout = UICollectionViewFlowLayout()
+            listLayout.scrollDirection = .vertical
+            
+            // Make the cell tall enough for image + title + category + price + rating + description
+            let cellHeight: CGFloat = 300  // you can fine-tune to 280–320 if needed
+            
+            listLayout.itemSize = CGSize(
+                width: collectionView.frame.width - 20,
+                height: cellHeight
+            )
+            
+            listLayout.minimumLineSpacing = 12
+            listLayout.sectionInset = UIEdgeInsets(
+                top: 10,
+                left: 10,
+                bottom: 10,
+                right: 10
+            )
+            
+            collectionView.setCollectionViewLayout(listLayout, animated: true)
+            navigationItem.rightBarButtonItem?.title = "Grid"
+        }
+    }
+
+
     // MARK: - Navigation
     private func showProductDetails(_ product: Product) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -128,3 +181,4 @@ extension HomeViewController: PinterestLayoutDelegate {
     
     func tagName(for indexPath: IndexPath) -> String { return "" }
 }
+
