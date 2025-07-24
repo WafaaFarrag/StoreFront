@@ -20,3 +20,12 @@
 /* Toggle Button Titles */
 "listToggleTitle" = "قائمة";
 "gridToggleTitle" = "شبكة";
+
+"errorServer" = "حدث خطأ في الخادم.";
+"errorDecoding" = "فشل في قراءة استجابة الخادم.";
+"errorNoInternet" = "لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة.";
+"errorTimeout" = "انتهت مهلة الطلب. يرجى المحاولة مرة أخرى.";
+"errorCancelled" = "تم إلغاء الطلب.";
+"errorUnauthorized" = "غير مصرح لك. يرجى تسجيل الدخول مرة أخرى.";
+"errorNotFound" = "المورد المطلوب غير موجود.";
+"errorUnknown" = "حدث خطأ غير متوقع. يرجى المحاولة لاحقًا.";

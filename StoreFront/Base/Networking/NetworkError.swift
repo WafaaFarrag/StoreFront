@@ -5,26 +5,49 @@
 //
 //  Created by wafaa farrag on 20/07/2025.
 //
-
 import Foundation
 import Moya
 
 enum NetworkError: Error, LocalizedError {
-    case server(String)      // Backend server error
-    case decoding             // Mapping error
-    case noInternet           // No internet
-    case timeout              // Request timeout
-    case cancelled            // Request was cancelled
-    case unknown              // Unknown error
-
+    
+    case server(statusCode: Int, message: String?)
+    case decoding
+    case noInternet
+    case timeout
+    case cancelled
+    case unauthorized
+    case notFound
+    case unknown
+    
     static func map(_ error: Error) -> NetworkError {
-
+        
+        if let networkError = error as? NetworkError {
+            return networkError
+        }
+        
+        if !ReachabilityManager.shared.isConnected {
+            return .noInternet
+        }
+        
         if let moyaError = error as? MoyaError {
             switch moyaError {
             case .statusCode(let response):
-                return .server("Server error: \(response.statusCode)")
-
+                let status = response.statusCode
+                switch status {
+                case 401, 403:
+                    return .unauthorized
+                case 404:
+                    return .notFound
+                case 500...599:
+                    return .server(statusCode: status, message: "Server internal error")
+                default:
+                    return .server(statusCode: status, message: "HTTP Error \(status)")
+                }
+                
             case .underlying(let nsError as NSError, _):
+                if !ReachabilityManager.shared.isConnected {
+                              return .noInternet
+                }
                 switch nsError.code {
                 case NSURLErrorNotConnectedToInternet:
                     return .noInternet
@@ -33,17 +56,17 @@ enum NetworkError: Error, LocalizedError {
                 case NSURLErrorCancelled:
                     return .cancelled
                 default:
-                    return .server(nsError.localizedDescription)
+                    return .server(statusCode: nsError.code, message: nsError.localizedDescription)
                 }
-
-            case .objectMapping:
+                
+            case .objectMapping, .encodableMapping, .jsonMapping:
                 return .decoding
-
+                
             default:
                 return .unknown
             }
         }
-
+        
         let nsError = error as NSError
         switch nsError.code {
         case NSURLErrorNotConnectedToInternet:
@@ -55,31 +78,32 @@ enum NetworkError: Error, LocalizedError {
         default:
             break
         }
-
+        
         if !ReachabilityManager.shared.isConnected {
             return .noInternet
         }
-
-        // 4. Fallback
+        
         return .unknown
     }
-
-
-    // MARK: - LocalizedError
+    
     var errorDescription: String? {
         switch self {
-        case .server(let message):
-            return message
+        case .server(_, let message):
+            return message ?? NSLocalizedString("errorServer", comment: "")
         case .decoding:
-            return NSLocalizedString("errorDecoding", comment: "Decoding error")
+            return NSLocalizedString("errorDecoding", comment: "")
         case .noInternet:
-            return NSLocalizedString("errorNoInternet", comment: "No internet connection")
+            return NSLocalizedString("errorNoInternet", comment: "")
         case .timeout:
-            return NSLocalizedString("errorTimeout", comment: "Request timeout")
+            return NSLocalizedString("errorTimeout", comment: "")
         case .cancelled:
-            return NSLocalizedString("errorCancelled", comment: "Request cancelled")
+            return NSLocalizedString("errorCancelled", comment: "")
+        case .unauthorized:
+            return NSLocalizedString("errorUnauthorized", comment: "")
+        case .notFound:
+            return NSLocalizedString("errorNotFound", comment: "")
         case .unknown:
-            return NSLocalizedString("errorUnknown", comment: "Unknown error")
+            return NSLocalizedString("errorUnknown", comment: "")
         }
     }
 }

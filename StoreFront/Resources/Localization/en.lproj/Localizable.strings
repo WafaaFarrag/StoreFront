@@ -20,3 +20,12 @@
 /* Toggle Button Titles */
 "listToggleTitle" = "List";
 "gridToggleTitle" = "Grid";
+
+"errorServer" = "Server error occurred.";
+"errorDecoding" = "Failed to decode server response.";
+"errorNoInternet" = "No internet connection. Please check your network.";
+"errorTimeout" = "The request timed out. Please try again.";
+"errorCancelled" = "The request was cancelled.";
+"errorUnauthorized" = "You are not authorized. Please log in again.";
+"errorNotFound" = "The requested resource was not found.";
+"errorUnknown" = "Something went wrong. Please try again later.";

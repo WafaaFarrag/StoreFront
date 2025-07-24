@@ -21,6 +21,7 @@ class APIManager {
             .filterSuccessfulStatusCodes()
             .map(T.self)
             .catch { error in
+                
                 return Single<T>.error(NetworkError.map(error))
             }
     }
