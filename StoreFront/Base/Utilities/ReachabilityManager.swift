@@ -25,7 +25,7 @@ final class ReachabilityManager {
             } else {
               
                 DispatchQueue.main.async {
-                    SwiftMessagesService.show(message: "No Internet Connection", theme: .error)
+                    SwiftMessagesService.show(message: "errorNoInternet".localized(), theme: .error)
                 }
             }
         }
