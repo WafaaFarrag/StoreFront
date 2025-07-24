@@ -4,12 +4,11 @@
 //
 //  Created by wafaa farrag on 20/07/2025.
 //
-
 import Foundation
 import RxSwift
 import RxCocoa
 
-class HomeViewModel: BaseViewModel {
+final class HomeViewModel: BaseViewModel {
     
     private let fetchProductsUseCase: FetchProductsUseCaseProtocol
     
@@ -19,26 +18,38 @@ class HomeViewModel: BaseViewModel {
     let products = BehaviorRelay<[Product]>(value: [])
     let selectedTabIndex = BehaviorRelay<Int>(value: 0)
     
+    let scrollOffset = PublishRelay<CGFloat>()
+    
     init(fetchProductsUseCase: FetchProductsUseCaseProtocol) {
         self.fetchProductsUseCase = fetchProductsUseCase
         super.init()
+        observeScrollForPagination()
     }
     
-    // MARK: - Initial Load
     func loadInitialProducts() {
         currentLimit = pageSize
         loadProducts(limit: currentLimit, isInitialLoad: true)
     }
     
-    // MARK: - Load More
-    func loadMoreProducts() {
-        guard !isLoading.value else { return } // prevent double load
-        
+    private func observeScrollForPagination() {
+        scrollOffset
+            .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
+            .withLatestFrom(products) { (distanceFromBottom, currentProducts) -> Bool in
+                let shouldLoadMore = distanceFromBottom < LayoutMetrics.paginationThreshold
+                return shouldLoadMore && !currentProducts.isEmpty && !self.isLoading.value
+            }
+            .filter { $0 }
+            .subscribe(onNext: { [weak self] _ in
+                self?.loadMoreProducts()
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func loadMoreProducts() {
         currentLimit += pageSize
         loadProducts(limit: currentLimit, isInitialLoad: false)
     }
     
-    // MARK: - Private API Call
     private func loadProducts(limit: Int, isInitialLoad: Bool) {
         isLoading.accept(true)
         
@@ -49,18 +60,14 @@ class HomeViewModel: BaseViewModel {
                 
                 switch result {
                 case .success(let fetchedProducts):
-                    
                     if isInitialLoad {
-                        // First load → replace
                         self.products.accept(fetchedProducts)
                     } else {
-                        //  Pagination → append only the new batch
                         let newItems = fetchedProducts.suffix(self.pageSize)
                         var current = self.products.value
                         current.append(contentsOf: newItems)
                         self.products.accept(current)
                     }
-                    
                 case .failure(let error):
                     self.handleError(error)
                 }
@@ -70,4 +77,3 @@ class HomeViewModel: BaseViewModel {
             .disposed(by: disposeBag)
     }
 }
-

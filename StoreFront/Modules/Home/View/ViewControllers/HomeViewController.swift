@@ -9,23 +9,22 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-class HomeViewController: BaseViewController, UICollectionViewDelegate {
+final class HomeViewController: BaseViewController, UICollectionViewDelegate {
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet private weak var collectionView: UICollectionView!
     
     private var dataSource: RxCollectionViewSectionedReloadDataSource<HomeSectionModel>!
     var viewModel: HomeViewModel!
     
     private var isGridLayout = true
-    
+    private var layoutToggleButton: UIButton!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupCollectionView()
         setupDataSource()
         bindViewModel()
         setupLayoutToggleButton()
-        
         if viewModel.products.value.isEmpty {
             viewModel.loadInitialProducts()
         }
@@ -35,18 +34,23 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
         self.viewModel = viewModel
     }
     
-    // MARK: - Setup Toggle Button
     private func setupLayoutToggleButton() {
-        let toggleButton = UIBarButtonItem(
-            title: "List",
-            style: .plain,
-            target: self,
-            action: #selector(toggleLayout)
-        )
-        navigationItem.rightBarButtonItem = toggleButton
+        layoutToggleButton = UIButton(type: .system)
+        layoutToggleButton.setImage(UIImage(systemName: "list.bullet"), for: .normal)
+        layoutToggleButton.setTitle(" " + "listToggleTitle".localized(), for: .normal)
+        layoutToggleButton.semanticContentAttribute = .forceLeftToRight
+        layoutToggleButton.tintColor = .systemRed
+        layoutToggleButton.setTitleColor(.systemRed, for: .normal)
+        layoutToggleButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        layoutToggleButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        layoutToggleButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
+        layoutToggleButton.addTarget(self, action: #selector(toggleLayout), for: .touchUpInside)
+        layoutToggleButton.sizeToFit()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: layoutToggleButton)
     }
+
+
     
-    // MARK: - Setup Collection View
     private func setupCollectionView() {
         let pinterestLayout = PinterestLayout()
         pinterestLayout.delegate = self
@@ -58,30 +62,8 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
         )
         
         collectionView.delegate = self
-        
-        // Infinite scroll trigger (safe)
-        collectionView.rx.contentOffset
-            .throttle(.milliseconds(500), scheduler: MainScheduler.instance) // prevent spam
-            .subscribe(onNext: { [weak self] offset in
-                guard let self = self else { return }
-                
-                // Don’t trigger while already loading
-                if self.viewModel.isLoading.value { return }
-                
-                let contentHeight = self.collectionView.contentSize.height
-                let scrollHeight = self.collectionView.frame.size.height
-                
-                // Trigger when 1.5 screens before bottom
-                let threshold = contentHeight - scrollHeight * 1.5
-                
-                if offset.y > threshold {
-                    self.viewModel.loadMoreProducts()
-                }
-            })
-            .disposed(by: disposeBag)
     }
     
-    // MARK: - Setup Rx DataSource
     private func setupDataSource() {
         dataSource = RxCollectionViewSectionedReloadDataSource<HomeSectionModel>(
             configureCell: { [weak self] _, collectionView, indexPath, item in
@@ -94,12 +76,8 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
                 return cell
             }
         )
-        
     }
     
-    
-    
-    // MARK: - Bind ViewModel
     private func bindViewModel() {
         bindLoading(viewModel.isLoading)
         
@@ -113,9 +91,17 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
                 self?.showProductDetails(product)
             })
             .disposed(by: disposeBag)
+        
+        collectionView.rx.contentOffset
+            .map { [weak self] offset -> CGFloat in
+                guard let self = self else { return 0 }
+                let contentHeight = self.collectionView.contentSize.height
+                let scrollHeight = self.collectionView.bounds.height
+                return contentHeight - (offset.y + scrollHeight)
+            }
+            .bind(to: viewModel.scrollOffset)
+            .disposed(by: disposeBag)
     }
-    
-    // MARK: - Layout Toggle Action
     
     @objc private func toggleLayout() {
         isGridLayout.toggle()
@@ -124,42 +110,37 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
             let pinterestLayout = PinterestLayout()
             pinterestLayout.delegate = self
             collectionView.setCollectionViewLayout(pinterestLayout, animated: true)
-            navigationItem.rightBarButtonItem?.title = "List"
+            layoutToggleButton.setImage(UIImage(systemName: "list.bullet"), for: .normal)
+            layoutToggleButton.setTitle(" " + "listToggleTitle".localized(), for: .normal)
         } else {
             let listLayout = UICollectionViewFlowLayout()
             listLayout.scrollDirection = .vertical
-            listLayout.itemSize = CGSize(
-                width: collectionView.frame.width - 20,
-                height: 240
-            )
-            listLayout.minimumLineSpacing = 12
-            listLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+            let availableWidth = collectionView.bounds.width - LayoutMetrics.sectionInset.left - LayoutMetrics.sectionInset.right
+            listLayout.itemSize = CGSize(width: availableWidth, height: LayoutMetrics.listCellHeight)
+            listLayout.minimumLineSpacing = LayoutMetrics.gridSpacing
+            listLayout.sectionInset = LayoutMetrics.sectionInset
             collectionView.setCollectionViewLayout(listLayout, animated: true)
-            navigationItem.rightBarButtonItem?.title = "Grid"
+            layoutToggleButton.setImage(UIImage(systemName: "square.grid.2x2"), for: .normal)
+            layoutToggleButton.setTitle(" " + "gridToggleTitle".localized(), for: .normal)
         }
         
-        
+        layoutToggleButton.sizeToFit()
         collectionView.reloadData()
         collectionView.layoutIfNeeded()
-        
         
         for cell in collectionView.visibleCells {
             if let indexPath = collectionView.indexPath(for: cell),
                let productCell = cell as? ProductCollectionViewCell {
-                
                 let section = dataSource.sectionModels[indexPath.section]
                 if case .productsSection(let products) = section {
                     let product = products[indexPath.item]
-                    
-                    
                     productCell.configure(with: product, isGrid: isGridLayout)
                 }
             }
         }
     }
-    
-    
-    // MARK: - Navigation
+
+
     private func showProductDetails(_ product: Product) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let detailsVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailsViewController") as? ProductDetailsViewController {
@@ -169,45 +150,28 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
     }
 }
 
-// MARK: - Pinterest Masonry Layout
 extension HomeViewController: PinterestLayoutDelegate {
-
     func collectionView(_ collectionView: UICollectionView, heightForItemAt indexPath: IndexPath) -> CGFloat {
         let section = dataSource.sectionModels[indexPath.section]
         switch section {
         case .productsSection(let products):
             let product = products[indexPath.item]
             
-            let columnWidth = (UIScreen.main.bounds.width / 3) - 24
+            let availableWidth = collectionView.bounds.width - LayoutMetrics.sectionInset.left - LayoutMetrics.sectionInset.right - (LayoutMetrics.gridSpacing * (LayoutMetrics.gridColumns - 1))
+            let columnWidth = availableWidth / LayoutMetrics.gridColumns
             
-          
-            let imageHeight: CGFloat = columnWidth
-            
-            
-            let titleFont = UIFont(name: "Nunito-Bold", size: 14) ?? .systemFont(ofSize: 14)
-            let titleHeight = product.title.heightWithConstrainedWidth(width: columnWidth, font: titleFont)
-            
-            let categoryFont = UIFont(name: "Nunito-Regular", size: 12) ?? .systemFont(ofSize: 12)
-            let categoryHeight = "Category: \(product.category.capitalized)"
-                .heightWithConstrainedWidth(width: columnWidth, font: categoryFont)
-            
-            let priceFont = UIFont(name: "Nunito-ExtraBold", size: 16) ?? .systemFont(ofSize: 16)
-            let priceHeight = String(format: "$%.2f", product.price)
-                .heightWithConstrainedWidth(width: columnWidth, font: priceFont)
-            
-            let ratingFont = UIFont(name: "Nunito-Regular", size: 12) ?? .systemFont(ofSize: 12)
+            let imageHeight = columnWidth
+            let titleHeight = product.title.heightWithConstrainedWidth(width: columnWidth, font: LayoutMetrics.Fonts.title)
+            let categoryHeight = "Category: \(product.category.capitalized)".heightWithConstrainedWidth(width: columnWidth, font: LayoutMetrics.Fonts.category)
+            let priceHeight = String(format: "$%.2f", product.price).heightWithConstrainedWidth(width: columnWidth, font: LayoutMetrics.Fonts.price)
             let stars = String(repeating: "⭐️", count: Int(product.rating.rate.rounded()))
-            let ratingHeight = "\(stars) (\(product.rating.count))"
-                .heightWithConstrainedWidth(width: columnWidth, font: ratingFont)
+            let ratingHeight = "\(stars) (\(product.rating.count))".heightWithConstrainedWidth(width: columnWidth, font: LayoutMetrics.Fonts.rating)
             
-            let verticalSpacing: CGFloat = 8 * 4
+            let verticalSpacing = LayoutMetrics.gridSpacing * 4
             
-         
             return imageHeight + titleHeight + categoryHeight + priceHeight + ratingHeight + verticalSpacing
         }
     }
-
     
     func tagName(for indexPath: IndexPath) -> String { return "" }
 }
-

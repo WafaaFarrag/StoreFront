@@ -44,7 +44,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="HDB-Ot-5xq">
-                                <rect key="frame" x="0.0" y="59" width="393" height="713"/>
+                                <rect key="frame" x="0.0" y="67" width="393" height="705"/>
                                 <color key="backgroundColor" name="profileBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="DGI-s0-dCY">
                                     <size key="itemSize" width="128" height="128"/>
@@ -70,8 +70,8 @@
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="HDB-Ot-5xq" secondAttribute="bottom" constant="80" id="B6W-5M-90R"/>
                             <constraint firstItem="HDB-Ot-5xq" firstAttribute="leading" secondItem="Rpc-Vk-AWZ" secondAttribute="leading" id="LpU-JY-3K5"/>
-                            <constraint firstAttribute="trailing" secondItem="HDB-Ot-5xq" secondAttribute="trailing" id="Wyn-9T-htc"/>
-                            <constraint firstItem="HDB-Ot-5xq" firstAttribute="top" secondItem="Rpc-Vk-AWZ" secondAttribute="top" id="aHV-EF-1rs"/>
+                            <constraint firstItem="Rpc-Vk-AWZ" firstAttribute="trailing" secondItem="HDB-Ot-5xq" secondAttribute="trailing" id="Wyn-9T-htc"/>
+                            <constraint firstItem="HDB-Ot-5xq" firstAttribute="top" secondItem="Rpc-Vk-AWZ" secondAttribute="top" constant="8" id="aHV-EF-1rs"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 1" id="yDQ-GU-Q0f"/>
@@ -265,13 +265,13 @@
             <color red="0.96470588235294119" green="0.95686274509803926" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

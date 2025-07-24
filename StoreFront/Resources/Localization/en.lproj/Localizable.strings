@@ -1,1 +1,22 @@
 
+/* Tab Bar Titles */
+"homeTab" = "Home";
+"cartTab" = "Cart";
+
+/* Product Details Screen */
+"productDetailsTitle" = "Details";
+"categoryLabelPrefix" = "Category: ";
+"priceFormat" = "$%.2f";
+
+/* Loading & Errors */
+"loadingMessage" = "Loading...";
+"errorGeneric" = "Something went wrong. Please try again.";
+"retry" = "Retry";
+
+/* Empty States */
+"noProducts" = "No products available.";
+"noCartItems" = "Your cart is empty.";
+
+/* Toggle Button Titles */
+"listToggleTitle" = "List";
+"gridToggleTitle" = "Grid";

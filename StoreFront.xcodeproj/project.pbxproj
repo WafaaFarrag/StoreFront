@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		8963ABB72E2CB7DB00DC4651 /* ProductDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8963ABB62E2CB7DB00DC4651 /* ProductDetailsViewController.swift */; };
+		8967DA5F2E320EDE00044858 /* LayoutMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8967DA5E2E320EDE00044858 /* LayoutMetrics.swift */; };
 		89A2128D2DBE2ACB0098A4E2 /* ProductCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A2128F2DBE2ACB0098A4E2 /* ProductCollectionViewCell.xib */; };
 		89A2129F2DBE47720098A4E2 /* HomeSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A2129E2DBE47720098A4E2 /* HomeSectionModel.swift */; };
-		89A212A12DBE4EC90098A4E2 /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A212A02DBE4EC90098A4E2 /* Int+Extensions.swift */; };
 		89A212A72DBE95260098A4E2 /* PinterestLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A212A62DBE95260098A4E2 /* PinterestLayout.swift */; };
 		89A212A92DBEC4FF0098A4E2 /* LoadingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A212A82DBEC4FF0098A4E2 /* LoadingService.swift */; };
 		89A212B92DBEE22A0098A4E2 /* Nunito-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89A212AB2DBEE2290098A4E2 /* Nunito-SemiBold.ttf */; };
@@ -56,7 +56,6 @@
 		89DD76DE2DBBB7FD00DA62D6 /* SwiftMessagesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DD76DD2DBBB7FD00DA62D6 /* SwiftMessagesService.swift */; };
 		89DD76E02DBBB81400DA62D6 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DD76DF2DBBB81400DA62D6 /* Logger.swift */; };
 		89DD76E22DBBB83000DA62D6 /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DD76E12DBBB83000DA62D6 /* ReachabilityManager.swift */; };
-		89DD76E42DBBB84100DA62D6 /* DateFormatterHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DD76E32DBBB84100DA62D6 /* DateFormatterHelper.swift */; };
 		89E8EC782DBBBF4F00160B86 /* ProductsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E8EC772DBBBF4F00160B86 /* ProductsRepository.swift */; };
 		89E8EC7C2DBBBF6F00160B86 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E8EC7B2DBBBF6F00160B86 /* HomeViewModel.swift */; };
 		CC50098CF6DD133E83DF7616 /* Pods_StoreFront.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F154826E118176B238715823 /* Pods_StoreFront.framework */; };
@@ -83,11 +82,11 @@
 		66440C80530B7B0FEDD15275 /* Pods-StoreFront.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StoreFront.release.xcconfig"; path = "Target Support Files/Pods-StoreFront/Pods-StoreFront.release.xcconfig"; sourceTree = "<group>"; };
 		6D8D8A9F5C9F40395B4126B0 /* Pods-StoreFront.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StoreFront.debug.xcconfig"; path = "Target Support Files/Pods-StoreFront/Pods-StoreFront.debug.xcconfig"; sourceTree = "<group>"; };
 		8963ABB62E2CB7DB00DC4651 /* ProductDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailsViewController.swift; sourceTree = "<group>"; };
+		8967DA5E2E320EDE00044858 /* LayoutMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutMetrics.swift; sourceTree = "<group>"; };
 		89A2128E2DBE2ACB0098A4E2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ProductCollectionViewCell.xib; sourceTree = "<group>"; };
 		89A212922DBE2AEF0098A4E2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ProductCollectionViewCell.strings; sourceTree = "<group>"; };
 		89A212942DBE2AF10098A4E2 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/ProductCollectionViewCell.strings; sourceTree = "<group>"; };
 		89A2129E2DBE47720098A4E2 /* HomeSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSectionModel.swift; sourceTree = "<group>"; };
-		89A212A02DBE4EC90098A4E2 /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
 		89A212A62DBE95260098A4E2 /* PinterestLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinterestLayout.swift; sourceTree = "<group>"; };
 		89A212A82DBEC4FF0098A4E2 /* LoadingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingService.swift; sourceTree = "<group>"; };
 		89A212AB2DBEE2290098A4E2 /* Nunito-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -140,7 +139,6 @@
 		89DD76DD2DBBB7FD00DA62D6 /* SwiftMessagesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMessagesService.swift; sourceTree = "<group>"; };
 		89DD76DF2DBBB81400DA62D6 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		89DD76E12DBBB83000DA62D6 /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
-		89DD76E32DBBB84100DA62D6 /* DateFormatterHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterHelper.swift; sourceTree = "<group>"; };
 		89E8EC772DBBBF4F00160B86 /* ProductsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsRepository.swift; sourceTree = "<group>"; };
 		89E8EC7B2DBBBF6F00160B86 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		DA87D917E7D572B916BC53A3 /* Pods-StoreFront.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StoreFront.debug.xcconfig"; path = "Target Support Files/Pods-StoreFront/Pods-StoreFront.debug.xcconfig"; sourceTree = "<group>"; };
@@ -419,10 +417,9 @@
 				89DD76DD2DBBB7FD00DA62D6 /* SwiftMessagesService.swift */,
 				89DD76DF2DBBB81400DA62D6 /* Logger.swift */,
 				89DD76E12DBBB83000DA62D6 /* ReachabilityManager.swift */,
-				89DD76E32DBBB84100DA62D6 /* DateFormatterHelper.swift */,
 				89B075A32DBE221200BD953A /* String+Extensions.swift */,
-				89A212A02DBE4EC90098A4E2 /* Int+Extensions.swift */,
 				89A212A82DBEC4FF0098A4E2 /* LoadingService.swift */,
+				8967DA5E2E320EDE00044858 /* LayoutMetrics.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -697,6 +694,7 @@
 				89DD76CA2DBBB71800DA62D6 /* AppCoordinator.swift in Sources */,
 				89E8EC782DBBBF4F00160B86 /* ProductsRepository.swift in Sources */,
 				89B075872DBDD77A00BD953A /* ProductsViewController.swift in Sources */,
+				8967DA5F2E320EDE00044858 /* LayoutMetrics.swift in Sources */,
 				89BC7B902DBCE987009EC6C4 /* FetchProductsUseCase.swift in Sources */,
 				89DD76CE2DBBB74800DA62D6 /* AppDIContainer.swift in Sources */,
 				89DD76D42DBBB79B00DA62D6 /* BaseRepository.swift in Sources */,
@@ -709,7 +707,6 @@
 				89DD76D02DBBB76B00DA62D6 /* BaseViewController.swift in Sources */,
 				89DD76D62DBBB7AB00DA62D6 /* BaseUseCase.swift in Sources */,
 				89DD76E02DBBB81400DA62D6 /* Logger.swift in Sources */,
-				89DD76E42DBBB84100DA62D6 /* DateFormatterHelper.swift in Sources */,
 				89DD76DC2DBBB7E700DA62D6 /* NetworkError.swift in Sources */,
 				89DD76DA2DBBB7D300DA62D6 /* APITarget.swift in Sources */,
 				89E8EC7C2DBBBF6F00160B86 /* HomeViewModel.swift in Sources */,
@@ -717,7 +714,6 @@
 				89A2129F2DBE47720098A4E2 /* HomeSectionModel.swift in Sources */,
 				89A212A92DBEC4FF0098A4E2 /* LoadingService.swift in Sources */,
 				89B075A42DBE221200BD953A /* String+Extensions.swift in Sources */,
-				89A212A12DBE4EC90098A4E2 /* Int+Extensions.swift in Sources */,
 				89DD76DE2DBBB7FD00DA62D6 /* SwiftMessagesService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

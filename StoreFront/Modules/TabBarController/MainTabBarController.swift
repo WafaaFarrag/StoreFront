@@ -6,42 +6,22 @@
 //
 import UIKit
 
-class MainTabBarController: UITabBarController {
+final class MainTabBarController: UITabBarController {
     
     private let centerButton = UIButton()
     
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViewControllers()
         customizeTabBarAppearance()
         selectedIndex = 0
-
     }
  
-    // MARK: - Setup Tabs
     private func setupViewControllers() {
         viewControllers = [
             createHomeNavController(),
-            createNavController(for: CartViewController(), titleKey: "cartTab", imageName: "cartIcon", selectedImageName: "cartSelectedIcon"),
-           
+            createCartNavController()
         ]
-    }
-    
-    private func createNavController(for rootViewController: UIViewController,
-                                     titleKey: String,
-                                     imageName: String,
-                                     selectedImageName: String) -> UINavigationController {
-        
-        let navController = UINavigationController(rootViewController: rootViewController)
-        
-        navController.tabBarItem = UITabBarItem(
-            title: titleKey.localized(),
-            image: UIImage(named: imageName),
-            selectedImage: UIImage(named: selectedImageName)
-        )
-        
-        return navController
     }
     
     private func createHomeNavController() -> UINavigationController {
@@ -59,28 +39,35 @@ class MainTabBarController: UITabBarController {
         let navController = UINavigationController(rootViewController: homeVC)
         navController.tabBarItem = UITabBarItem(
             title: "homeTab".localized(),
-            image: UIImage(named: "homeIcon"),
-            selectedImage: UIImage(named: "homeSelectedIcon")
+            image: UIImage(named: LayoutMetrics.TabBar.homeIcon),
+            selectedImage: UIImage(named: LayoutMetrics.TabBar.homeSelectedIcon)
         )
-        
+        return navController
+    }
+    
+    private func createCartNavController() -> UINavigationController {
+        let cartVC = CartViewController()
+        let navController = UINavigationController(rootViewController: cartVC)
+        navController.tabBarItem = UITabBarItem(
+            title: "cartTab".localized(),
+            image: UIImage(named: LayoutMetrics.TabBar.cartIcon),
+            selectedImage: UIImage(named: LayoutMetrics.TabBar.cartSelectedIcon)
+        )
         return navController
     }
 
-    // MARK: - TabBar Appearance
     private func customizeTabBarAppearance() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
-
+        appearance.backgroundColor = LayoutMetrics.TabBar.backgroundColor
+        
         tabBar.standardAppearance = appearance
-
         if #available(iOS 15.0, *) {
             tabBar.scrollEdgeAppearance = appearance
         }
-
-        tabBar.tintColor = .redPrimary
-        tabBar.unselectedItemTintColor = UIColor.lightGray
+        
+        tabBar.tintColor = LayoutMetrics.TabBar.tintColor
+        tabBar.unselectedItemTintColor = LayoutMetrics.TabBar.unselectedTintColor
         tabBar.layer.masksToBounds = true
     }
-
 }
