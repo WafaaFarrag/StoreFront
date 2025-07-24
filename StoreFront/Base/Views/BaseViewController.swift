@@ -13,14 +13,14 @@ class BaseViewController: UIViewController {
     
     var disposeBag = DisposeBag()
 
-    func bindLoading(_ loading: BehaviorRelay<Bool>) {
+    func bindLoading(_ loading: BehaviorRelay<Bool>, on targetView: UIView) {
         loading
             .asDriver()
             .drive(onNext: { isLoading in
                 if isLoading {
-                    LoadingService.show()
+                    LoadingService.show(on: targetView)
                 } else {
-                    LoadingService.hide()
+                    LoadingService.hide(from: targetView)
                 }
             })
             .disposed(by: disposeBag)
@@ -34,3 +34,4 @@ class BaseViewController: UIViewController {
         SwiftMessagesService.show(message: message, theme: .error)
     }
 }
+

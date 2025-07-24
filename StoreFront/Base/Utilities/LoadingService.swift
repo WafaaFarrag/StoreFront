@@ -5,32 +5,20 @@
 //  Created by wafaa farrag on 20/07/2025.
 //
 
-
 import UIKit
+import SkeletonView
 
-class LoadingService {
+import SkeletonView
+
+final class LoadingService {
     
-    private static var spinner: UIActivityIndicatorView?
-
-    static func show() {
-        guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
-
-        if spinner == nil {
-            let activityIndicator = UIActivityIndicatorView(style: .large)
-            activityIndicator.color = .redPrimary
-            activityIndicator.center = window.center
-            activityIndicator.startAnimating()
-            activityIndicator.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-            activityIndicator.frame = window.bounds
-
-            window.addSubview(activityIndicator)
-            spinner = activityIndicator
-        }
+    static func show(on view: UIView) {
+        let gradient = SkeletonGradient(baseColor: .systemGray5, secondaryColor: .systemGray4)
+        view.showAnimatedGradientSkeleton(usingGradient: gradient, transition: .crossDissolve(0.25))
     }
 
-    static func hide() {
-        spinner?.stopAnimating()
-        spinner?.removeFromSuperview()
-        spinner = nil
+    static func hide(from view: UIView) {
+        view.hideSkeleton(transition: .crossDissolve(0.25))
     }
 }
+

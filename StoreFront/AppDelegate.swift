@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,17 +26,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let font = UIFont(name: "Nunito-Regular", size: 12) {
             let attributes: [NSAttributedString.Key: Any] = [
                 .font: font,
-                .foregroundColor: UIColor.black // normal state color
+                .foregroundColor: UIColor.black
             ]
 
             UITabBarItem.appearance().setTitleTextAttributes(attributes, for: .normal)
             UITabBarItem.appearance().setTitleTextAttributes(attributes, for: .selected)
         }
 
-
+        setupSkeletonAppearance()
+        
         return true
     }
-
+    
+    private func setupSkeletonAppearance() {
+        SkeletonAppearance.default.tintColor = UIColor.lightGray.withAlphaComponent(0.3)
+        SkeletonAppearance.default.gradient = SkeletonGradient(
+            baseColor: UIColor.systemGray5,
+            secondaryColor: UIColor.systemGray4
+        )
+        SkeletonAppearance.default.multilineHeight = 12
+    }
 
     private func setupRootViewController() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

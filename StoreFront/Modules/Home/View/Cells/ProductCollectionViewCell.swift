@@ -18,6 +18,7 @@ final class ProductCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        setupSkeletonShapes()
         setupUI()
     }
     
@@ -30,6 +31,12 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         priceLabel.text = nil
         ratingLabel.text = nil
     }
+    
+    private func setupSkeletonShapes() {
+        isSkeletonable = true
+        contentView.isSkeletonable = true
+    }
+
     
     private func setupUI() {
         layer.cornerRadius = LayoutMetrics.cornerRadius
@@ -53,16 +60,24 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         let starsCount = Int(product.rating.rate.rounded())
         let stars = String(repeating: "⭐️", count: starsCount)
         ratingLabel.text = "\(stars) (\(product.rating.count))"
-        
+                
         if let url = URL(string: product.image) {
+            let options: KingfisherOptionsInfo = [
+                .transition(.fade(0.2)),
+                .cacheOriginalImage,
+                .memoryCacheExpiration(.days(7)),
+                .diskCacheExpiration(.days(7))
+            ]
+            
             productImageView.kf.setImage(
                 with: url,
                 placeholder: LayoutMetrics.placeholderImage,
-                options: [.transition(.fade(0.25)), .cacheOriginalImage]
+                options: options
             )
         } else {
             productImageView.image = LayoutMetrics.placeholderImage
         }
+
         
         productImageView.contentMode = .scaleAspectFit
     }

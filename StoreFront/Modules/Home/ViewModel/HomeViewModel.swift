@@ -9,11 +9,14 @@ import RxSwift
 import RxCocoa
 
 final class HomeViewModel: BaseViewModel {
-    
+
     private let fetchProductsUseCase: FetchProductsUseCaseProtocol
     
     private var currentLimit = 7
     private let pageSize = 7
+    
+    private var lastFetchedCount = 0
+    private var hasMoreData = true
     
     let products = BehaviorRelay<[Product]>(value: [])
     let selectedTabIndex = BehaviorRelay<Int>(value: 0)
@@ -28,15 +31,23 @@ final class HomeViewModel: BaseViewModel {
     
     func loadInitialProducts() {
         currentLimit = pageSize
+        hasMoreData = true
+        lastFetchedCount = 0
         loadProducts(limit: currentLimit, isInitialLoad: true)
     }
-    
+
+    func loadMoreProducts() {
+        guard !isLoading.value, hasMoreData else { return }
+        currentLimit += pageSize
+        loadProducts(limit: currentLimit, isInitialLoad: false)
+    }
+
     private func observeScrollForPagination() {
         scrollOffset
             .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
             .withLatestFrom(products) { (distanceFromBottom, currentProducts) -> Bool in
                 let shouldLoadMore = distanceFromBottom < LayoutMetrics.paginationThreshold
-                return shouldLoadMore && !currentProducts.isEmpty && !self.isLoading.value
+                return shouldLoadMore && !currentProducts.isEmpty && !self.isLoading.value && self.hasMoreData
             }
             .filter { $0 }
             .subscribe(onNext: { [weak self] _ in
@@ -44,12 +55,7 @@ final class HomeViewModel: BaseViewModel {
             })
             .disposed(by: disposeBag)
     }
-    
-    private func loadMoreProducts() {
-        currentLimit += pageSize
-        loadProducts(limit: currentLimit, isInitialLoad: false)
-    }
-    
+
     private func loadProducts(limit: Int, isInitialLoad: Bool) {
         isLoading.accept(true)
         
@@ -60,14 +66,23 @@ final class HomeViewModel: BaseViewModel {
                 
                 switch result {
                 case .success(let fetchedProducts):
+                    if fetchedProducts.count == self.lastFetchedCount {
+                        self.hasMoreData = false
+                        self.isLoading.accept(false)
+                        return
+                    }
+                    
+                    self.lastFetchedCount = fetchedProducts.count
+                    
                     if isInitialLoad {
                         self.products.accept(fetchedProducts)
                     } else {
-                        let newItems = fetchedProducts.suffix(self.pageSize)
-                        var current = self.products.value
-                        current.append(contentsOf: newItems)
-                        self.products.accept(current)
+                        let current = self.products.value
+                        let newItems = fetchedProducts.dropFirst(current.count)
+                        let updated = current + newItems
+                        self.products.accept(updated)
                     }
+                    
                 case .failure(let error):
                     self.handleError(error)
                 }

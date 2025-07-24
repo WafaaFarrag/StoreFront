@@ -8,6 +8,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import SkeletonView
 
 final class HomeViewController: BaseViewController, UICollectionViewDelegate {
     
@@ -21,17 +22,31 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
         setupCollectionView()
         setupDataSource()
         bindViewModel()
         setupLayoutToggleButton()
+//        if viewModel.products.value.isEmpty {
+//            viewModel.loadInitialProducts()
+//        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
         if viewModel.products.value.isEmpty {
+            collectionView.showAnimatedGradientSkeleton()
             viewModel.loadInitialProducts()
         }
     }
     
     func configure(with viewModel: HomeViewModel) {
         self.viewModel = viewModel
+    }
+    
+    private func setupUI() {
+        collectionView.isSkeletonable = true
     }
     
     private func setupLayoutToggleButton() {
@@ -79,7 +94,7 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
     }
     
     private func bindViewModel() {
-        bindLoading(viewModel.isLoading)
+        bindLoading(viewModel.isLoading, on: collectionView)
         
         viewModel.products
             .map { [HomeSectionModel.productsSection(items: $0)] }
@@ -125,8 +140,7 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
         }
         
         layoutToggleButton.sizeToFit()
-        collectionView.reloadData()
-        collectionView.layoutIfNeeded()
+        collectionView.collectionViewLayout.invalidateLayout()
         
         for cell in collectionView.visibleCells {
             if let indexPath = collectionView.indexPath(for: cell),
@@ -174,4 +188,14 @@ extension HomeViewController: PinterestLayoutDelegate {
     }
     
     func tagName(for indexPath: IndexPath) -> String { return "" }
+}
+
+extension RxCollectionViewSectionedReloadDataSource: SkeletonCollectionViewDataSource {
+    public func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 7
+    }
+    
+    public func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return "ProductCollectionViewCell"
+    }
 }

@@ -27,7 +27,6 @@
 		89A212C42DBEE22A0098A4E2 /* Nunito-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89A212B62DBEE22A0098A4E2 /* Nunito-ExtraLightItalic.ttf */; };
 		89A212C52DBEE22A0098A4E2 /* Nunito-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89A212B72DBEE22A0098A4E2 /* Nunito-LightItalic.ttf */; };
 		89A212C62DBEE22A0098A4E2 /* Nunito-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89A212B82DBEE22A0098A4E2 /* Nunito-Light.ttf */; };
-		89B075872DBDD77A00BD953A /* ProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B075862DBDD77A00BD953A /* ProductsViewController.swift */; };
 		89B0758A2DBDE2C200BD953A /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B075892DBDE2C200BD953A /* MainTabBarController.swift */; };
 		89B0758C2DBDE32C00BD953A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B0758B2DBDE32C00BD953A /* HomeViewController.swift */; };
 		89B075902DBDE35800BD953A /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B0758F2DBDE35800BD953A /* CartViewController.swift */; };
@@ -103,7 +102,6 @@
 		89A212B62DBEE22A0098A4E2 /* Nunito-ExtraLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		89A212B72DBEE22A0098A4E2 /* Nunito-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-LightItalic.ttf"; sourceTree = "<group>"; };
 		89A212B82DBEE22A0098A4E2 /* Nunito-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-Light.ttf"; sourceTree = "<group>"; };
-		89B075862DBDD77A00BD953A /* ProductsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsViewController.swift; sourceTree = "<group>"; };
 		89B075892DBDE2C200BD953A /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		89B0758B2DBDE32C00BD953A /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		89B0758F2DBDE35800BD953A /* CartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
@@ -252,7 +250,6 @@
 			isa = PBXGroup;
 			children = (
 				89B0758B2DBDE32C00BD953A /* HomeViewController.swift */,
-				89B075862DBDD77A00BD953A /* ProductsViewController.swift */,
 				89A2129E2DBE47720098A4E2 /* HomeSectionModel.swift */,
 				89A212A62DBE95260098A4E2 /* PinterestLayout.swift */,
 			);
@@ -693,7 +690,6 @@
 				89BC7B992DBCFE14009EC6C4 /* ProductCollectionViewCell.swift in Sources */,
 				89DD76CA2DBBB71800DA62D6 /* AppCoordinator.swift in Sources */,
 				89E8EC782DBBBF4F00160B86 /* ProductsRepository.swift in Sources */,
-				89B075872DBDD77A00BD953A /* ProductsViewController.swift in Sources */,
 				8967DA5F2E320EDE00044858 /* LayoutMetrics.swift in Sources */,
 				89BC7B902DBCE987009EC6C4 /* FetchProductsUseCase.swift in Sources */,
 				89DD76CE2DBBB74800DA62D6 /* AppDIContainer.swift in Sources */,

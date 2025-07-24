@@ -18,6 +18,9 @@ target 'StoreFront' do
 
 
   pod 'ReachabilitySwift', '~> 5.0'
+  
+  pod 'SkeletonView'
+
 end
 
 
