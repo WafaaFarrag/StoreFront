@@ -130,7 +130,7 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
             listLayout.scrollDirection = .vertical
             listLayout.itemSize = CGSize(
                 width: collectionView.frame.width - 20,
-                height: 250
+                height: 240
             )
             listLayout.minimumLineSpacing = 12
             listLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -171,21 +171,42 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
 
 // MARK: - Pinterest Masonry Layout
 extension HomeViewController: PinterestLayoutDelegate {
+
     func collectionView(_ collectionView: UICollectionView, heightForItemAt indexPath: IndexPath) -> CGFloat {
         let section = dataSource.sectionModels[indexPath.section]
         switch section {
         case .productsSection(let products):
             let product = products[indexPath.item]
             
-            let baseHeight: CGFloat = 180
-            let titleHeight = product.title.heightWithConstrainedWidth(
-                width: (UIScreen.main.bounds.width / 3) - 24,
-                font: UIFont.systemFont(ofSize: 14)
-            )
+            let columnWidth = (UIScreen.main.bounds.width / 3) - 24
             
-            return baseHeight + titleHeight + 40
+          
+            let imageHeight: CGFloat = columnWidth
+            
+            
+            let titleFont = UIFont(name: "Nunito-Bold", size: 14) ?? .systemFont(ofSize: 14)
+            let titleHeight = product.title.heightWithConstrainedWidth(width: columnWidth, font: titleFont)
+            
+            let categoryFont = UIFont(name: "Nunito-Regular", size: 12) ?? .systemFont(ofSize: 12)
+            let categoryHeight = "Category: \(product.category.capitalized)"
+                .heightWithConstrainedWidth(width: columnWidth, font: categoryFont)
+            
+            let priceFont = UIFont(name: "Nunito-ExtraBold", size: 16) ?? .systemFont(ofSize: 16)
+            let priceHeight = String(format: "$%.2f", product.price)
+                .heightWithConstrainedWidth(width: columnWidth, font: priceFont)
+            
+            let ratingFont = UIFont(name: "Nunito-Regular", size: 12) ?? .systemFont(ofSize: 12)
+            let stars = String(repeating: "⭐️", count: Int(product.rating.rate.rounded()))
+            let ratingHeight = "\(stars) (\(product.rating.count))"
+                .heightWithConstrainedWidth(width: columnWidth, font: ratingFont)
+            
+            let verticalSpacing: CGFloat = 8 * 4
+            
+         
+            return imageHeight + titleHeight + categoryHeight + priceHeight + ratingHeight + verticalSpacing
         }
     }
+
     
     func tagName(for indexPath: IndexPath) -> String { return "" }
 }

@@ -47,18 +47,19 @@ class ProductCollectionViewCell: UICollectionViewCell {
         titleLabel.text = product.title
         categoryLabel.text = "Category: \(product.category.capitalized)"
         priceLabel.text = String(format: "$%.2f", product.price)
-        
+
         let starsCount = Int(product.rating.rate.rounded())
         let stars = String(repeating: "⭐️", count: starsCount)
         ratingLabel.text = "\(stars) (\(product.rating.count))"
-        
+
         if let url = URL(string: product.image) {
             productImageView.kf.setImage(with: url)
         } else {
             productImageView.image = UIImage(named: "placeholder")
         }
-        
-        productImageView.contentMode = isGrid ? .scaleAspectFill : .scaleAspectFit
+
+        // ✅ Always keep the same mode
+        productImageView.contentMode = .scaleAspectFit
     }
-    
+
 }
