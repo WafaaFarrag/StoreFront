@@ -19,7 +19,7 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
     
     private var isGridLayout = true
     private var layoutToggleButton: UIButton!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -27,18 +27,10 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
         setupDataSource()
         bindViewModel()
         setupLayoutToggleButton()
-//        if viewModel.products.value.isEmpty {
-//            viewModel.loadInitialProducts()
-//        }
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
         if viewModel.products.value.isEmpty {
-            collectionView.showAnimatedGradientSkeleton()
-            viewModel.loadInitialProducts()
-        }
+             collectionView.showAnimatedGradientSkeleton()
+             viewModel.loadInitialProducts()
+         }
     }
     
     func configure(with viewModel: HomeViewModel) {
@@ -63,8 +55,8 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
         layoutToggleButton.sizeToFit()
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: layoutToggleButton)
     }
-
-
+    
+    
     
     private func setupCollectionView() {
         let pinterestLayout = PinterestLayout()
@@ -153,8 +145,8 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
             }
         }
     }
-
-
+    
+    
     private func showProductDetails(_ product: Product) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let detailsVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailsViewController") as? ProductDetailsViewController {
@@ -162,6 +154,7 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
             navigationController?.pushViewController(detailsVC, animated: true)
         }
     }
+    
 }
 
 extension HomeViewController: PinterestLayoutDelegate {
@@ -188,14 +181,7 @@ extension HomeViewController: PinterestLayoutDelegate {
     }
     
     func tagName(for indexPath: IndexPath) -> String { return "" }
+    
 }
 
-extension RxCollectionViewSectionedReloadDataSource: SkeletonCollectionViewDataSource {
-    public func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
-    }
-    
-    public func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        return "ProductCollectionViewCell"
-    }
-}
+

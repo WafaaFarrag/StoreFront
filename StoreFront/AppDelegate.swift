@@ -7,6 +7,7 @@
 
 import UIKit
 import SkeletonView
+import Kingfisher
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -34,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         setupSkeletonAppearance()
-        
+        configureKingfisherCache()
         return true
     }
     
@@ -46,6 +47,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
         SkeletonAppearance.default.multilineHeight = 12
     }
+    
+    private func configureKingfisherCache() {
+           let cache = ImageCache.default
+           cache.memoryStorage.config.totalCostLimit = 50 * 1024 * 1024
+           cache.diskStorage.config.sizeLimit = 200 * 1024 * 1024
+           cache.memoryStorage.config.expiration = .days(7)
+           cache.diskStorage.config.expiration = .days(30)
+       }
 
     private func setupRootViewController() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

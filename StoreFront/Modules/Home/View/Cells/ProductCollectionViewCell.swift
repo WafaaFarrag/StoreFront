@@ -36,7 +36,7 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         isSkeletonable = true
         contentView.isSkeletonable = true
     }
-
+    
     
     private func setupUI() {
         layer.cornerRadius = LayoutMetrics.cornerRadius
@@ -60,7 +60,7 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         let starsCount = Int(product.rating.rate.rounded())
         let stars = String(repeating: "⭐️", count: starsCount)
         ratingLabel.text = "\(stars) (\(product.rating.count))"
-                
+        
         if let url = URL(string: product.image) {
             let options: KingfisherOptionsInfo = [
                 .transition(.fade(0.2)),
@@ -77,7 +77,7 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         } else {
             productImageView.image = LayoutMetrics.placeholderImage
         }
-
+        
         
         productImageView.contentMode = .scaleAspectFit
     }

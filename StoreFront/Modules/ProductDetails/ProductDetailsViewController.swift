@@ -22,7 +22,7 @@ final class ProductDetailsViewController: BaseViewController, UIScrollViewDelega
     
     var product: Product!
     
-    private var defaultImageHeight: CGFloat = 250 // initial height
+    private var defaultImageHeight: CGFloat = 250
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,11 +53,19 @@ final class ProductDetailsViewController: BaseViewController, UIScrollViewDelega
         guard let product = product else { return }
         
         if let url = URL(string: product.image) {
+            let processor = DownsamplingImageProcessor(size: productImageView.bounds.size)
+            
             productImageView.kf.setImage(
                 with: url,
                 placeholder: LayoutMetrics.placeholderImage,
-                options: [.transition(.fade(0.25)), .cacheOriginalImage]
+                options: [
+                    .processor(processor),
+                    .scaleFactor(UIScreen.main.scale),
+                    .transition(.fade(0.25)),
+                    .cacheOriginalImage
+                ]
             )
+            
         } else {
             productImageView.image = LayoutMetrics.placeholderImage
         }
@@ -78,13 +86,12 @@ final class ProductDetailsViewController: BaseViewController, UIScrollViewDelega
         )
     }
     
-    // MARK: - Stretchable Header Effect
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let yOffset = scrollView.contentOffset.y
-        if yOffset < 0 {
-            imageHeightConstraint.constant = defaultImageHeight - yOffset
-        } else {
-            imageHeightConstraint.constant = defaultImageHeight
+        let newHeight = yOffset < 0 ? defaultImageHeight - yOffset : defaultImageHeight
+        if imageHeightConstraint.constant != newHeight {
+            imageHeightConstraint.constant = newHeight
         }
     }
+    
 }
