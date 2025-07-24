@@ -98,21 +98,51 @@ class ProductsViewController: BaseViewController, UICollectionViewDelegate {
 
 // MARK: - Pinterest Masonry Layout
 extension ProductsViewController: PinterestLayoutDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, heightForItemAt indexPath: IndexPath) -> CGFloat {
         let section = dataSource.sectionModels[indexPath.section]
+        
         switch section {
         case .productsSection(let products):
             let product = products[indexPath.item]
             
-            let baseHeight: CGFloat = 180 // image
-            let titleHeight = product.title.heightWithConstrainedWidth(
-                width: (UIScreen.main.bounds.width / 3) - 24,
-                font: UIFont.systemFont(ofSize: 14)
-            )
+            let columnWidth = (UIScreen.main.bounds.width / 3) - 24
             
-            return baseHeight + titleHeight + 40 // space for category + price + rating
+            // Fixed image height
+            let imageHeight: CGFloat = 180
+            
+            // Title dynamic height with Nunito-Bold 14pt
+            let titleFont = UIFont(name: "Nunito-Bold", size: 14) ?? .systemFont(ofSize: 14)
+            let titleHeight = product.title.heightWithConstrainedWidth(width: columnWidth, font: titleFont)
+            
+            // Category dynamic height with Nunito-Regular 12pt
+            let categoryFont = UIFont(name: "Nunito-Regular", size: 12) ?? .systemFont(ofSize: 12)
+            let categoryText = "Category: \(product.category.capitalized)"
+            let categoryHeight = categoryText.heightWithConstrainedWidth(width: columnWidth, font: categoryFont)
+            
+            // Price dynamic height with Nunito-ExtraBold 16pt
+            let priceFont = UIFont(name: "Nunito-ExtraBold", size: 16) ?? .systemFont(ofSize: 16)
+            let priceText = String(format: "$%.2f", product.price)
+            let priceHeight = priceText.heightWithConstrainedWidth(width: columnWidth, font: priceFont)
+            
+            // Rating dynamic height with Nunito-Regular 12pt
+            let ratingFont = UIFont(name: "Nunito-Regular", size: 12) ?? .systemFont(ofSize: 12)
+            let stars = String(repeating: "⭐️", count: Int(product.rating.rate.rounded()))
+            let ratingText = "\(stars) (\(product.rating.count))"
+            let ratingHeight = ratingText.heightWithConstrainedWidth(width: columnWidth, font: ratingFont)
+            
+            // Add vertical spacing between labels (e.g. 4 gaps × 8pt)
+            let verticalSpacing: CGFloat = 8 * 4
+            
+            return imageHeight
+            + titleHeight
+            + categoryHeight
+            + priceHeight
+            + ratingHeight
+            + verticalSpacing
         }
     }
+    
     
     func tagName(for indexPath: IndexPath) -> String { return "" }
 }

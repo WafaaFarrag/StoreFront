@@ -16,7 +16,6 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
     private var dataSource: RxCollectionViewSectionedReloadDataSource<HomeSectionModel>!
     var viewModel: HomeViewModel!
     
-    /// Track current layout mode
     private var isGridLayout = true
     
     override func viewDidLoad() {
@@ -85,16 +84,20 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
     // MARK: - Setup Rx DataSource
     private func setupDataSource() {
         dataSource = RxCollectionViewSectionedReloadDataSource<HomeSectionModel>(
-            configureCell: { _, collectionView, indexPath, item in
+            configureCell: { [weak self] _, collectionView, indexPath, item in
+                guard let self = self else { return UICollectionViewCell() }
                 let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "ProductCollectionViewCell",
                     for: indexPath
                 ) as! ProductCollectionViewCell
-                cell.configure(with: item)
+                cell.configure(with: item, isGrid: self.isGridLayout)
                 return cell
             }
         )
+        
     }
+    
+    
     
     // MARK: - Bind ViewModel
     private func bindViewModel() {
@@ -118,44 +121,49 @@ class HomeViewController: BaseViewController, UICollectionViewDelegate {
         isGridLayout.toggle()
         
         if isGridLayout {
-            
             let pinterestLayout = PinterestLayout()
             pinterestLayout.delegate = self
             collectionView.setCollectionViewLayout(pinterestLayout, animated: true)
             navigationItem.rightBarButtonItem?.title = "List"
-            
         } else {
-           
             let listLayout = UICollectionViewFlowLayout()
             listLayout.scrollDirection = .vertical
-            
-            // Make the cell tall enough for image + title + category + price + rating + description
-            let cellHeight: CGFloat = 300  // you can fine-tune to 280–320 if needed
-            
             listLayout.itemSize = CGSize(
                 width: collectionView.frame.width - 20,
-                height: cellHeight
+                height: 250
             )
-            
             listLayout.minimumLineSpacing = 12
-            listLayout.sectionInset = UIEdgeInsets(
-                top: 10,
-                left: 10,
-                bottom: 10,
-                right: 10
-            )
-            
+            listLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
             collectionView.setCollectionViewLayout(listLayout, animated: true)
             navigationItem.rightBarButtonItem?.title = "Grid"
         }
+        
+        
+        collectionView.reloadData()
+        collectionView.layoutIfNeeded()
+        
+        
+        for cell in collectionView.visibleCells {
+            if let indexPath = collectionView.indexPath(for: cell),
+               let productCell = cell as? ProductCollectionViewCell {
+                
+                let section = dataSource.sectionModels[indexPath.section]
+                if case .productsSection(let products) = section {
+                    let product = products[indexPath.item]
+                    
+                    
+                    productCell.configure(with: product, isGrid: isGridLayout)
+                }
+            }
+        }
     }
-
-
+    
+    
     // MARK: - Navigation
     private func showProductDetails(_ product: Product) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let detailsVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailsViewController") as? ProductDetailsViewController {
-             detailsVC.product = product
+            detailsVC.product = product
             navigationController?.pushViewController(detailsVC, animated: true)
         }
     }
@@ -169,13 +177,13 @@ extension HomeViewController: PinterestLayoutDelegate {
         case .productsSection(let products):
             let product = products[indexPath.item]
             
-            let baseHeight: CGFloat = 180 // image height
+            let baseHeight: CGFloat = 180
             let titleHeight = product.title.heightWithConstrainedWidth(
                 width: (UIScreen.main.bounds.width / 3) - 24,
                 font: UIFont.systemFont(ofSize: 14)
             )
             
-            return baseHeight + titleHeight + 40 // extra space for category + price + rating
+            return baseHeight + titleHeight + 40
         }
     }
     
