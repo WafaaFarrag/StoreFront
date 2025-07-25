@@ -19,6 +19,7 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
     
     private var isGridLayout = true
     private var layoutToggleButton: UIButton!
+    private let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,9 +29,9 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
         bindViewModel()
         setupLayoutToggleButton()
         if viewModel.products.value.isEmpty {
-             collectionView.showAnimatedGradientSkeleton()
-             viewModel.loadInitialProducts()
-         }
+            collectionView.showAnimatedGradientSkeleton()
+            viewModel.loadInitialProducts()
+        }
     }
     
     func configure(with viewModel: HomeViewModel) {
@@ -56,19 +57,19 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: layoutToggleButton)
     }
     
-    
-    
     private func setupCollectionView() {
         let pinterestLayout = PinterestLayout()
         pinterestLayout.delegate = self
         collectionView.setCollectionViewLayout(pinterestLayout, animated: false)
-        
         collectionView.register(
             UINib(nibName: "ProductCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "ProductCollectionViewCell"
         )
-        
         collectionView.delegate = self
+        refreshControl.tintColor = .systemRed
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        collectionView.refreshControl = refreshControl
     }
     
     private func setupDataSource() {
@@ -89,6 +90,9 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
         bindLoading(viewModel.isLoading, on: collectionView)
         
         viewModel.products
+            .do(onNext: { [weak self] _ in
+                self?.refreshControl.endRefreshing()
+            })
             .map { [HomeSectionModel.productsSection(items: $0)] }
             .bind(to: collectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
@@ -108,6 +112,10 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
             }
             .bind(to: viewModel.scrollOffset)
             .disposed(by: disposeBag)
+    }
+    
+    @objc private func refreshData() {
+        viewModel.loadInitialProducts()
     }
     
     @objc private func toggleLayout() {
@@ -146,7 +154,6 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
         }
     }
     
-    
     private func showProductDetails(_ product: Product) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let detailsVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailsViewController") as? ProductDetailsViewController {
@@ -154,7 +161,6 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
             navigationController?.pushViewController(detailsVC, animated: true)
         }
     }
-    
 }
 
 extension HomeViewController: PinterestLayoutDelegate {
@@ -163,25 +169,18 @@ extension HomeViewController: PinterestLayoutDelegate {
         switch section {
         case .productsSection(let products):
             let product = products[indexPath.item]
-            
             let availableWidth = collectionView.bounds.width - LayoutMetrics.sectionInset.left - LayoutMetrics.sectionInset.right - (LayoutMetrics.gridSpacing * (LayoutMetrics.gridColumns - 1))
             let columnWidth = availableWidth / LayoutMetrics.gridColumns
-            
             let imageHeight = columnWidth
             let titleHeight = product.title.heightWithConstrainedWidth(width: columnWidth, font: LayoutMetrics.Fonts.title)
             let categoryHeight = "Category: \(product.category.capitalized)".heightWithConstrainedWidth(width: columnWidth, font: LayoutMetrics.Fonts.category)
             let priceHeight = String(format: "$%.2f", product.price).heightWithConstrainedWidth(width: columnWidth, font: LayoutMetrics.Fonts.price)
             let stars = String(repeating: "⭐️", count: Int(product.rating.rate.rounded()))
             let ratingHeight = "\(stars) (\(product.rating.count))".heightWithConstrainedWidth(width: columnWidth, font: LayoutMetrics.Fonts.rating)
-            
             let verticalSpacing = LayoutMetrics.gridSpacing * 4
-            
             return imageHeight + titleHeight + categoryHeight + priceHeight + ratingHeight + verticalSpacing
         }
     }
     
     func tagName(for indexPath: IndexPath) -> String { return "" }
-    
 }
-
-
