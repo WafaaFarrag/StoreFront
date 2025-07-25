@@ -30,6 +30,11 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
         bindViewModel()
         setupLayoutToggleButton()
         observeNetworkRestoration()
+    
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
         if viewModel.products.value.isEmpty {
             collectionView.showAnimatedGradientSkeleton()
@@ -132,6 +137,15 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
         bindLoading(viewModel.isLoading, on: collectionView)
         
         viewModel.products
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    self.collectionView.collectionViewLayout.invalidateLayout()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.products
             .do(onNext: { [weak self] _ in
                 self?.refreshControl.endRefreshing()
             })
@@ -139,7 +153,7 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
             .bind(to: collectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
         
-        collectionView.rx.modelSelected(Product.self)
+        collectionView.rx.modelSelected(ProductModel.self)
             .subscribe(onNext: { [weak self] product in
                 self?.showProductDetails(product)
             })
@@ -221,7 +235,7 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
         }
     }
     
-    private func showProductDetails(_ product: Product) {
+    private func showProductDetails(_ product: ProductModel) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let detailsVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailsViewController") as? ProductDetailsViewController {
             detailsVC.product = product

@@ -13,7 +13,7 @@ struct Rating: Codable {
     let count: Int
 }
 
-struct Product: Codable {
+struct ProductModel: Codable {
     let id: Int
     let title: String
     let price: Double
@@ -23,12 +23,12 @@ struct Product: Codable {
     let rating: Rating
 }
 
-extension Product: IdentifiableType, Equatable {
+extension ProductModel: IdentifiableType, Equatable {
     public var identity: String {
-        return "\(id)"  
+        return "\(id)"  // id is used as the unique identifier
     }
     
-    public static func == (lhs: Product, rhs: Product) -> Bool {
+    public static func == (lhs: ProductModel, rhs: ProductModel) -> Bool {
         return lhs.id == rhs.id &&
                lhs.title == rhs.title &&
                lhs.price == rhs.price &&
@@ -37,4 +37,9 @@ extension Product: IdentifiableType, Equatable {
                lhs.rating.rate == rhs.rating.rate &&
                lhs.rating.count == rhs.rating.count
     }
+}
+
+struct ProductResult {
+    let products: [ProductModel]
+    let isFromCache: Bool
 }

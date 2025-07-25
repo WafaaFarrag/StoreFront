@@ -4,15 +4,13 @@
 //
 //  Created by wafaa farrag on 26/04/2025.
 //
-
 import Foundation
 import RxSwift
-
 protocol FetchProductsUseCaseProtocol {
-    func execute(limit: Int) -> Single<[Product]>
+    func execute(limit: Int?) -> Observable<ProductResult>
 }
 
-class FetchProductsUseCase: BaseUseCase, FetchProductsUseCaseProtocol {
+final class FetchProductsUseCase: BaseUseCase, FetchProductsUseCaseProtocol {
 
     private let repository: ProductsRepositoryProtocol
     
@@ -20,7 +18,7 @@ class FetchProductsUseCase: BaseUseCase, FetchProductsUseCaseProtocol {
         self.repository = repository
     }
     
-    func execute(limit: Int) -> Single<[Product]> {
+    func execute(limit: Int? = nil) -> Observable<ProductResult> {
         return repository.fetchProducts(limit: limit)
     }
 }

@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:StoreFront/ProductManagedObject+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:StoreFront/ProductManagedObject+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
       location = "group:StoreFront.xcodeproj">
    </FileRef>
    <FileRef

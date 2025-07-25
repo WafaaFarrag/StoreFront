@@ -52,7 +52,7 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         ratingLabel.font = LayoutMetrics.Fonts.rating
     }
     
-    func configure(with product: Product, isGrid: Bool = true) {
+    func configure(with product: ProductModel, isGrid: Bool = true) {
         titleLabel.text = product.title
         categoryLabel.text = "Category: \(product.category.capitalized)"
         priceLabel.text = String(format: "$%.2f", product.price)

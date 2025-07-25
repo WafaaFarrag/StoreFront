@@ -8,11 +8,11 @@
 import RxDataSources
 
 enum HomeSectionModel {
-    case productsSection(items: [Product])
+    case productsSection(items: [ProductModel])
 }
 
 extension HomeSectionModel: AnimatableSectionModelType {
-    typealias Item = Product
+    typealias Item = ProductModel
     
     var identity: String {
         switch self {
@@ -21,14 +21,14 @@ extension HomeSectionModel: AnimatableSectionModelType {
         }
     }
     
-    var items: [Product] {
+    var items: [ProductModel] {
         switch self {
         case .productsSection(let items):
             return items
         }
     }
     
-    init(original: HomeSectionModel, items: [Product]) {
+    init(original: HomeSectionModel, items: [ProductModel]) {
         switch original {
         case .productsSection:
             self = .productsSection(items: items)

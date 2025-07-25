@@ -20,7 +20,7 @@ final class ProductDetailsViewController: BaseViewController, UIScrollViewDelega
     @IBOutlet private weak var ratingLabel: UILabel!
     @IBOutlet private weak var descriptionLabel: UILabel!
     
-    var product: Product!
+    var product: ProductModel!
     
     private var defaultImageHeight: CGFloat = 250
     

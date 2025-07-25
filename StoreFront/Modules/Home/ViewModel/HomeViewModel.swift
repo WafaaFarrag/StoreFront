@@ -7,6 +7,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+
 final class HomeViewModel: BaseViewModel {
 
     private let fetchProductsUseCase: FetchProductsUseCaseProtocol
@@ -17,7 +18,7 @@ final class HomeViewModel: BaseViewModel {
     private var lastFetchedCount = 0
     private var hasMoreData = true
     
-    let products = BehaviorRelay<[Product]>(value: [])
+    let products = BehaviorRelay<[ProductModel]>(value: [])
     let selectedTabIndex = BehaviorRelay<Int>(value: 0)
     
     let scrollOffset = PublishRelay<CGFloat>()
@@ -57,30 +58,30 @@ final class HomeViewModel: BaseViewModel {
             .disposed(by: disposeBag)
     }
 
-    /// Loads products from API with completion callback for success/failure
     private func loadProducts(limit: Int, isInitialLoad: Bool, completion: ((Bool) -> Void)?) {
         
         isLoading.accept(true)
         
         fetchProductsUseCase.execute(limit: limit)
             .observe(on: MainScheduler.instance)
-            .subscribe { [weak self] result in
-                guard let self = self else { return }
-                
-                switch result {
-                case .success(let fetchedProducts):
-                    if fetchedProducts.count == self.lastFetchedCount {
-                        self.hasMoreData = false
-                        self.isLoading.accept(false)
-                        completion?(true) // No new data, but not a failure
-                        return
+            .subscribe(
+                onNext: { [weak self] result in
+                    guard let self = self else { return }
+                    
+                    let fetchedProducts = result.products
+            
+                    if !result.isFromCache {
+                        if fetchedProducts.count == self.lastFetchedCount {
+                            self.hasMoreData = false
+                        }
+                        self.lastFetchedCount = fetchedProducts.count
                     }
                     
-                    self.lastFetchedCount = fetchedProducts.count
-                    
                     if isInitialLoad {
+                     
                         self.products.accept(fetchedProducts)
                     } else {
+                       
                         let current = self.products.value
                         let newItems = fetchedProducts.dropFirst(current.count)
                         let updated = current + newItems
@@ -88,14 +89,16 @@ final class HomeViewModel: BaseViewModel {
                     }
                     
                     completion?(true)
-                    
-                case .failure(let error):
-                    self.handleError(error)
+                },
+                onError: { [weak self] error in
+                    self?.handleError(error)
                     completion?(false)
+                },
+                onCompleted: { [weak self] in
+                    self?.isLoading.accept(false)
                 }
-                
-                self.isLoading.accept(false)
-            }
+            )
             .disposed(by: disposeBag)
     }
+
 }
