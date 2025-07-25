@@ -119,8 +119,31 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
     }
     
     @objc private func refreshData() {
-        viewModel.loadInitialProducts()
+        refreshControl.beginRefreshing()
+        
+        
+        let status = ReachabilityManager.shared.monitor.currentPath.status
+        guard status == .satisfied else {
+            refreshControl.endRefreshing()
+            SwiftMessagesService.show(message: "errorNoInternet".localized(), theme: .error)
+            return
+        }
+        
+        
+        ReachabilityManager.shared.verifyInternetAccess { hasInternet in
+            if hasInternet {
+                self.viewModel.loadInitialProducts()
+            } else {
+                self.refreshControl.endRefreshing()
+                SwiftMessagesService.show(
+                    message: "No actual internet connection".localized(),
+                    theme: .error
+                )
+            }
+        }
     }
+
+
     
     @objc private func toggleLayout() {
         isGridLayout.toggle()

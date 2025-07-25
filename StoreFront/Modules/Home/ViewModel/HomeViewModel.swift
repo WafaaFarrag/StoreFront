@@ -57,6 +57,8 @@ final class HomeViewModel: BaseViewModel {
     }
 
     private func loadProducts(limit: Int, isInitialLoad: Bool) {
+        
+        
         isLoading.accept(true)
         
         fetchProductsUseCase.execute(limit: limit)
