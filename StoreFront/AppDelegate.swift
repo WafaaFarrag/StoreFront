@@ -36,7 +36,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         setupSkeletonAppearance()
         configureKingfisherCache()
+        saveBase()
         return true
+    }
+    
+    private func saveBase(){
+        if KeychainManager.load(forKey: "api_base_url") == nil {
+            KeychainManager.save("https://fakestoreapi.com", forKey: "api_base_url")
+        }
     }
     
     private func setupSkeletonAppearance() {

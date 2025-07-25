@@ -13,10 +13,15 @@ enum AppEnvironment {
     enum Environment {
         case staging
         case production
-  
+        
         var baseURL: String {
             switch self {
-            case .staging, .production : return "https://fakestoreapi.com"
+            case .staging, .production :
+                if let savedURL = KeychainManager.load(forKey: "api_base_url") {
+                    return savedURL
+                } else {
+                    return "https://fakestoreapi.com"
+                }
             
             }
         }

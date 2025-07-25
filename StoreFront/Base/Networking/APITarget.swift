@@ -15,9 +15,13 @@ enum APITarget {
 extension APITarget: TargetType {
     
     var baseURL: URL {
+        if let savedURL = KeychainManager.load(forKey: "api_base_url"),
+           let url = URL(string: savedURL), !savedURL.isEmpty {
+            return url
+        }
         return URL(string: "https://fakestoreapi.com")!
     }
-    
+
     var path: String {
         switch self {
         case .getProducts, .getProductsWithLimit:
