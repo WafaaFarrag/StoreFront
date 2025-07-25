@@ -7,7 +7,6 @@
 import Foundation
 import RxSwift
 import RxCocoa
-
 final class HomeViewModel: BaseViewModel {
 
     private let fetchProductsUseCase: FetchProductsUseCaseProtocol
@@ -29,17 +28,19 @@ final class HomeViewModel: BaseViewModel {
         observeScrollForPagination()
     }
     
-    func loadInitialProducts() {
+    /// Loads initial products (resetting pagination) and notifies completion
+    func loadInitialProducts(completion: ((Bool) -> Void)? = nil) {
         currentLimit = pageSize
         hasMoreData = true
         lastFetchedCount = 0
-        loadProducts(limit: currentLimit, isInitialLoad: true)
+        loadProducts(limit: currentLimit, isInitialLoad: true, completion: completion)
     }
 
+    /// Loads more products for pagination
     func loadMoreProducts() {
         guard !isLoading.value, hasMoreData else { return }
         currentLimit += pageSize
-        loadProducts(limit: currentLimit, isInitialLoad: false)
+        loadProducts(limit: currentLimit, isInitialLoad: false, completion: nil)
     }
 
     private func observeScrollForPagination() {
@@ -56,8 +57,8 @@ final class HomeViewModel: BaseViewModel {
             .disposed(by: disposeBag)
     }
 
-    private func loadProducts(limit: Int, isInitialLoad: Bool) {
-        
+    /// Loads products from API with completion callback for success/failure
+    private func loadProducts(limit: Int, isInitialLoad: Bool, completion: ((Bool) -> Void)?) {
         
         isLoading.accept(true)
         
@@ -71,6 +72,7 @@ final class HomeViewModel: BaseViewModel {
                     if fetchedProducts.count == self.lastFetchedCount {
                         self.hasMoreData = false
                         self.isLoading.accept(false)
+                        completion?(true) // No new data, but not a failure
                         return
                     }
                     
@@ -85,8 +87,11 @@ final class HomeViewModel: BaseViewModel {
                         self.products.accept(updated)
                     }
                     
+                    completion?(true)
+                    
                 case .failure(let error):
                     self.handleError(error)
+                    completion?(false)
                 }
                 
                 self.isLoading.accept(false)

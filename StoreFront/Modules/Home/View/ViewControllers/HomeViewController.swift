@@ -23,16 +23,54 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
         setupCollectionView()
         setupDataSource()
         bindViewModel()
         setupLayoutToggleButton()
+        observeNetworkRestoration()
+        
         if viewModel.products.value.isEmpty {
             collectionView.showAnimatedGradientSkeleton()
             viewModel.loadInitialProducts()
         }
     }
+
+    private func observeNetworkRestoration() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(networkDidRestore),
+            name: .networkRestored,
+            object: nil
+        )
+    }
+
+    @objc private func networkDidRestore() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            if self.viewModel.products.value.isEmpty {
+                self.collectionView.showAnimatedGradientSkeleton()
+                self.viewModel.loadInitialProducts { [weak self] success in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        self.collectionView.hideSkeleton()
+                        if !success {
+                            SwiftMessagesService.show(
+                                message: "errorLoadingData".localized(),
+                                theme: .error
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    
+  
     
     func configure(with viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -119,29 +157,31 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
     }
     
     @objc private func refreshData() {
-        refreshControl.beginRefreshing()
-        
-        
-        let status = ReachabilityManager.shared.monitor.currentPath.status
-        guard status == .satisfied else {
+        guard ReachabilityManager.shared.isConnected else {
             refreshControl.endRefreshing()
-            SwiftMessagesService.show(message: "errorNoInternet".localized(), theme: .error)
+            
+            SwiftMessagesService.show(
+                message: "errorNoInternet".localized(),
+                theme: .error
+            )
             return
         }
         
-        
-        ReachabilityManager.shared.verifyInternetAccess { hasInternet in
-            if hasInternet {
-                self.viewModel.loadInitialProducts()
-            } else {
+        viewModel.loadInitialProducts { [weak self] success in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
                 self.refreshControl.endRefreshing()
-                SwiftMessagesService.show(
-                    message: "No actual internet connection".localized(),
-                    theme: .error
-                )
+                if !success {
+                    SwiftMessagesService.show(
+                        message: "errorLoadingData".localized(),
+                        theme: .error
+                    )
+                }
             }
         }
     }
+
+
 
 
     
