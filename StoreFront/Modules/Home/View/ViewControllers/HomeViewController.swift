@@ -14,7 +14,7 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
     
     @IBOutlet private weak var collectionView: UICollectionView!
     
-    private var dataSource: RxCollectionViewSectionedReloadDataSource<HomeSectionModel>!
+    private var dataSource: RxCollectionViewSectionedAnimatedDataSource<HomeSectionModel>!
     var viewModel: HomeViewModel!
     
     private var isGridLayout = true
@@ -73,7 +73,10 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
     }
     
     private func setupDataSource() {
-        dataSource = RxCollectionViewSectionedReloadDataSource<HomeSectionModel>(
+        dataSource = RxCollectionViewSectionedAnimatedDataSource<HomeSectionModel>(
+            animationConfiguration: AnimationConfiguration(insertAnimation: .fade,
+                                                            reloadAnimation: .fade,
+                                                            deleteAnimation: .fade),
             configureCell: { [weak self] _, collectionView, indexPath, item in
                 guard let self = self else { return UICollectionViewCell() }
                 let cell = collectionView.dequeueReusableCell(
@@ -85,6 +88,7 @@ final class HomeViewController: BaseViewController, UICollectionViewDelegate {
             }
         )
     }
+
     
     private func bindViewModel() {
         bindLoading(viewModel.isLoading, on: collectionView)

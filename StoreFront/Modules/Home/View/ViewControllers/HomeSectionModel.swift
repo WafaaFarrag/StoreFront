@@ -11,8 +11,15 @@ enum HomeSectionModel {
     case productsSection(items: [Product])
 }
 
-extension HomeSectionModel: SectionModelType {
-    typealias Item = Product  
+extension HomeSectionModel: AnimatableSectionModelType {
+    typealias Item = Product
+    
+    var identity: String {
+        switch self {
+        case .productsSection:
+            return "productsSection"
+        }
+    }
     
     var items: [Product] {
         switch self {

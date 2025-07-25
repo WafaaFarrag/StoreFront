@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RxDataSources
 
 struct Rating: Codable {
     let rate: Double
@@ -22,3 +23,18 @@ struct Product: Codable {
     let rating: Rating
 }
 
+extension Product: IdentifiableType, Equatable {
+    public var identity: String {
+        return "\(id)"  
+    }
+    
+    public static func == (lhs: Product, rhs: Product) -> Bool {
+        return lhs.id == rhs.id &&
+               lhs.title == rhs.title &&
+               lhs.price == rhs.price &&
+               lhs.image == rhs.image &&
+               lhs.category == rhs.category &&
+               lhs.rating.rate == rhs.rating.rate &&
+               lhs.rating.count == rhs.rating.count
+    }
+}
