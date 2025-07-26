@@ -70,10 +70,10 @@ This repository contains the implementation of the Profile screen and related mo
 ---
 
 ## 📸 Screenshots
+<img width="381" height="801" alt="Screenshot 2025-07-26 at 4 42 57 AM" src="https://github.com/user-attachments/assets/fd5c601b-5215-4132-9a1d-e772f96efe51" />
+<img width="381" height="801" alt="Screenshot 2025-07-26 at 4 42 36 AM" src="https://github.com/user-attachments/assets/5bd4b871-70c2-4012-b689-845594919b9f" />
+<img width="381" height="801" alt="Screenshot 2025-07-26 at 4 42 19 AM" src="https://github.com/user-attachments/assets/c60333ff-5245-43e7-9140-5e49ad46a444" />
 
-| Profile Screen | Products Grid |
-|:--------------:|:--------------:|
-| _Coming Soon_ | _Coming Soon_ |
 
 
 
@@ -88,16 +88,7 @@ This repository contains the implementation of the Profile screen and related mo
 - ReachabilitySwift
 - SwiftMessages
 - MVVM Architecture
-
-Uploading StoreFront 15 - 2025-07-25 .mov…
-
-
 - Clean architecture principles
-
-
-Uploading StoreFront 15 - 2025-07-25 at 18.29.17.mov…
-
-
 ---
 
 ## 📬 Contact
