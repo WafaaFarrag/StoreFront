@@ -75,7 +75,7 @@ This repository contains the implementation of the Profile screen and related mo
 |:--------------:|:--------------:|
 | _Coming Soon_ | _Coming Soon_ |
 
-(*You can add screenshots later here if you want!*)
+
 
 ---
 
@@ -88,7 +88,15 @@ This repository contains the implementation of the Profile screen and related mo
 - ReachabilitySwift
 - SwiftMessages
 - MVVM Architecture
+
+Uploading StoreFront 15 - 2025-07-25 .mov…
+
+
 - Clean architecture principles
+
+
+Uploading StoreFront 15 - 2025-07-25 at 18.29.17.mov…
+
 
 ---
 
